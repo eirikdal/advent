@@ -5,8 +5,8 @@ import (
 	"strings"
 )
 
-func ReadFile() []string {
-	file, _ := os.ReadFile("calories")
+func ReadFile(filename string) []string {
+	file, _ := os.ReadFile(filename)
 	content := strings.Split(string(file), "\n")
 
 	return content

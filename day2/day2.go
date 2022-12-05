@@ -1,6 +1,8 @@
 package main
 
-import "github.com/hauk184/advent/files"
+import (
+	"github.com/hauk184/advent/files"
+)
 
 // 1 for rock
 // 2 for paper
@@ -11,7 +13,11 @@ import "github.com/hauk184/advent/files"
 // 6 for win
 
 func main() {
-	files.ReadFile()
+	content := files.ReadFile("input")
+
+	for _, line := range content {
+		println(line)
+	}
 }
 
 func OpponentIsRockMap(play string) int {
