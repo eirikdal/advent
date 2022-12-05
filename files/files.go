@@ -5,9 +5,9 @@ import (
 	"strings"
 )
 
-func ReadFile(filename string) []string {
-	file, _ := os.ReadFile(filename)
+func ReadFile(filename string) ([]string, error) {
+	file, err := os.ReadFile(filename)
 	content := strings.Split(string(file), "\n")
 
-	return content
+	return content, err
 }
