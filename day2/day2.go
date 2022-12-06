@@ -15,7 +15,7 @@ import (
 // 6 for win
 
 func main() {
-	content, _ := files.ReadFile("day2/input")
+	content := files.ReadFile("day2/input")
 	scoreMap := GetScoreMap()
 	playMap := GetPointsByPlay()
 	playBook := GetPlaybook()
