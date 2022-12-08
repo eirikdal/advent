@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/hauk184/advent/files"
+	"github.com/hauk184/advent/stack"
 	"strconv"
 	"strings"
 )
@@ -9,7 +10,7 @@ import (
 type crate struct {
 	value string
 }
-type crates []crate
+type crates stack.Stack[crate]
 
 type move struct {
 	number int
@@ -34,21 +35,9 @@ func main() {
 	}
 }
 
-func doMove(crates []crates, move move) {
-	a := crates[move.from].pop(move.number)
-	crates[move.to].push(a)
-}
-
-func (crates *crates) push(c crates) {
-	arr := make([]crate, 0)
-	arr = append(arr, c...)
-	*crates = append(arr, *crates...)
-}
-
-func (crates *crates) pop(number int) crates {
-	el := (*crates)[0:number]
-	*crates = (*crates)[number:]
-	return el
+func doMove(crates []stack.Stack[crate], move move) {
+	a := crates[move.from].Pop(move.number)
+	crates[move.to].Multipush(a)
 }
 
 func toMoves(input []string) []move {
@@ -69,10 +58,10 @@ func toMove(s string) move {
 	return move{number: atoi, from: from, to: to}
 }
 
-func toCrates(input []string) []crates {
-	crates := make([]crates, 10)
+func toCrates(input []string) []stack.Stack[crate] {
+	crates := make([]stack.Stack[crate], 10)
 	for i, _ := range crates {
-		crates[i] = make([]crate, 0)
+		crates[i] = make(stack.Stack[crate], 0)
 	}
 
 	for l, s := range input {
