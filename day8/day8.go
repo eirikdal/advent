@@ -6,21 +6,16 @@ import (
 	"strings"
 )
 
-type tree struct {
-	index   int
-	visible bool
-}
-
 func main() {
 	input := files.ReadFile("day8/input")
 	treeMap := make([][]int, len(input))
 	treeMap_t := make([][]int, len(input))
-	visibleMap := make([][]bool, len(input))
+	scenicMap := make([][]int, len(input))
 
 	for i, _ := range treeMap {
 		treeMap[i] = make([]int, len(input))
 		treeMap_t[i] = make([]int, len(input))
-		visibleMap[i] = make([]bool, len(input))
+		scenicMap[i] = make([]int, len(input))
 	}
 
 	for i, v := range input {
@@ -30,7 +25,7 @@ func main() {
 
 			treeMap[i][j] = num
 			treeMap_t[j][i] = num
-			visibleMap[i][j] = true
+			scenicMap[i][j] = 0
 		}
 	}
 
@@ -42,41 +37,40 @@ func main() {
 			if j == 0 || j == len(input)-1 {
 				continue
 			}
-			visibleMap[i][j] = isVisible(treeMap[i], j) || isVisible(treeMap_t[j], i)
+			score := calcScenicScore(treeMap[i], j)
+			scenicScore := calcScenicScore(treeMap_t[j], i)
+			scenicMap[i][j] = score * scenicScore
 		}
 	}
 
-	sumVisible := 0
-	for _, bools := range visibleMap {
-		for _, b := range bools {
-			if b {
-				sumVisible += 1
-				print(1)
-			} else {
-				print(0)
+	maxScenicScore := 0
+	for _, ints := range scenicMap {
+		for _, i := range ints {
+			if i > maxScenicScore {
+				maxScenicScore = i
 			}
 		}
-		println()
 	}
-	print(sumVisible)
+	println(maxScenicScore)
 }
 
-func isVisible(input []int, index int) bool {
-	visibleRight := true
-	visibleLeft := true
+func calcScenicScore(input []int, index int) int {
+	scenicScoreLeft := 0
+	scenicScoreRight := 0
 	for i, v := range input {
-		//if i != index {
 		if i < index { // west, north
 			if v >= input[index] {
-				visibleLeft = false
+				scenicScoreLeft = 1
+			} else {
+				scenicScoreLeft += 1
 			}
-		} else if i > index { // east, south
+		} else if i > index { // e
+			scenicScoreRight += 1 // ast, south
 			if v >= input[index] {
-				visibleRight = false
+				break
 			}
 		}
-		//}
 	}
 
-	return visibleRight || visibleLeft
+	return scenicScoreRight * scenicScoreLeft
 }
